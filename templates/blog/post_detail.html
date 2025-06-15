@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <!-- Заголовок поста -->
+            <h1 class="mb-4">{{ post.title }}</h1>
+                      
+            <!-- Содержание поста -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <p class="card-text">{{ post.content|linebreaks }}</p>
+                </div>
+                <div class="card-footer bg-transparent">  
+                    <div class="d-flex justify-content">  
+                        {% if user == post.author %}
+                            <a href="{% url 'edit_post' post.slug  %}" class="btn btn-outline-warning btn-sm">
+                                <i class="fas fa-edit"></i> Редактировать
+                            </a>
+                            <form action="{% url 'delete_post' post.slug %}" method="post" class="d-inline ms-2">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Удалить
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Кнопка возврата -->
+            <a href="{% url 'home' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Назад к списку постов
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
