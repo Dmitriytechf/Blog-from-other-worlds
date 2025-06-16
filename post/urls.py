@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from blog.views import custom_page_not_found
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 handler404 = custom_page_not_found 
@@ -25,4 +27,4 @@ handler404 = custom_page_not_found
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls'))
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

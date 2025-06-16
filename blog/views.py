@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect,  get_object_or_404
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, CustomUserCreationForm
 from django.utils import timezone
+from django.contrib.auth import login
+
 
 
 def post_blog(request):
@@ -20,7 +22,7 @@ def post_detail(request, slug):
 @login_required
 def create_post(request):
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False) # Временно не сохраняем
             post.author = request.user # Автоматически назначаем автора
@@ -63,3 +65,19 @@ def delete_post(request, slug):
 def custom_page_not_found(request, exception):
     '''Кастомная 404 ошибка'''
     return render(request, '404.html', status=404)
+
+
+
+def register(request):
+    if request.method == 'POST':
+        form =  CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.first_name = form.cleaned_data['first_name']
+            user.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form =  CustomUserCreationForm()
+        
+    return render(request, 'blog/register.html', {'form': form}) 

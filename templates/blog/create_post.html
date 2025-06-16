@@ -1,41 +1,166 @@
 {% extends 'base.html' %}
-
 {% load static %}
+
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <h2 class="mb-4">Создать новый пост</h2>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                
-                <div class="mb-3">
-                    <label for="{{ form.title.id_for_label }}" class="form-label">Заголовок</label>
-                    {{ form.title }}
-                    {% if form.title.errors %}
-                        <div class="alert alert-danger mt-2">{{ form.title.errors }}</div>
-                    {% endif %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-dark text-white py-3">
+                    <h2 class="h4 mb-0"><i class="fas fa-plus-circle me-2"></i>Создать новый пост</h2>
                 </div>
                 
-                <div class="mb-3">
-                    <label for="{{ form.content.id_for_label }}" class="form-label">Содержание</label>
-                    {{ form.content }}
-                    {% if form.content.errors %}
-                        <div class="alert alert-danger mt-2">{{ form.content.errors }}</div>
-                    {% endif %}
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Заголовок -->
+                        <div class="mb-4">
+                            <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">Заголовок поста</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Изображение -->
+                        <div class="mb-4">
+                            <label for="{{ form.image.id_for_label }}" class="form-label fw-bold">Изображение</label>
+                            <div class="custom-file-upload bg-light rounded p-3 border border-dark">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1">
+                                        <span id="file-name" class="text-muted">Файл не выбран</span>
+                                    </div>
+                                    <label for="id_image" class="btn btn-dark ms-3 mb-0">
+                                        <i class="fas fa-folder-open me-2"></i>Выбрать файл
+                                    </label>
+                                    {{ form.image }}
+                                </div>
+                            </div>
+                            <div class="form-text mt-2">Рекомендуемый размер: 1200×600px. Форматы: JPG, PNG (необязательно)</div>
+                            {% if form.image.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.image.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Содержание -->
+                        <div class="mb-4">
+                            <label for="{{ form.content.id_for_label }}" class="form-label fw-bold">Содержание поста</label>
+                            {{ form.content }}
+                            {% if form.content.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.content.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Публикация -->
+                        <div class="mb-4 form-check form-switch">
+                            {{ form.is_published }}
+                            <label for="{{ form.is_published.id_for_label }}" class="form-check-label fw-bold">
+                                {{ form.is_published.label }}
+                            </label>
+                        </div>
+                        
+                        <!-- Кнопки -->
+                        <div class="d-flex justify-content-between align-items-center border-top pt-4 mt-3">
+                            <button type="submit" class="btn btn-dark px-4 py-2">
+                                <i class="fas fa-paper-plane me-2"></i>Опубликовать
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-outline-dark">
+                                <i class="fas fa-times me-2"></i>Отмена
+                            </a>
+                        </div>
+                    </form>
                 </div>
-                
-                <div class="mb-3 form-check">
-                    {{ form.is_published }}
-                    <label for="{{ form.is_published.id_for_label }}" class="form-check-label">
-                        {{ form.is_published.label }}
-                    </label>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Опубликовать</button>
-                <a href="#" class="btn btn-secondary">Отмена</a>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #dee2e6;
+    }
+    
+    .card-header {
+        border-radius: 12px 12px 0 0 !important;
+        background-color: #343a40 !important;
+    }
+    
+    .form-control, .form-select {
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid #ced4da;
+        background-color: #f8f9fa;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #495057;
+        box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25);
+        background-color: #fff;
+    }
+    
+    textarea.form-control {
+        min-height: 250px;
+    }
+    
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+        margin-left: -0.5em;
+    }
+    
+    .custom-file-upload {
+        transition: all 0.3s ease;
+    }
+    
+    .custom-file-upload:hover {
+        background-color: #e9ecef !important;
+    }
+    
+    #id_image {
+        display: none;
+    }
+    
+    .btn-dark {
+        background-color: #343a40;
+        border-color: #343a40;
+    }
+    
+    .btn-dark:hover {
+        background-color: #23272b;
+        border-color: #1d2124;
+    }
+    
+    .btn-outline-dark {
+        color: #343a40;
+        border-color: #343a40;
+    }
+    
+    .btn-outline-dark:hover {
+        background-color: #343a40;
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        textarea.form-control {
+            min-height: 200px;
+        }
+        
+        .custom-file-upload {
+            padding: 1rem;
+        }
+    }
+</style>
 {% endblock %}

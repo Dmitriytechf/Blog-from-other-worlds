@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">  
+            <div class="card shadow-lg mt-5 border-0">  
+                <div class="card-header bg-dark text-white py-3">  
+                    <h2 class="text-center mb-0"><i class="bi bi-box-arrow-in-right me-2"></i>Вход в систему</h2>
+                </div>
+                <div class="card-body bg-light p-4">  
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+
+                        <div class="mb-4">  
+                            <label for="id_username" class="form-label fs-5 text-dark">  
+                                <i class="bi bi-person-fill me-2"></i>Имя пользователя
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary text-white fs-5 py-3">  
+                                    <i class="bi bi-person"></i>
+                                </span>
+                                <input type="text" 
+                                       name="username" 
+                                       class="form-control form-control-lg border-secondary"  
+                                       id="id_username"
+                                       placeholder="Введите ваш логин"
+                                       required>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="mb-4"> 
+                            <label for="id_password" class="form-label fs-5 text-dark">  
+                                <i class="bi bi-lock-fill me-2"></i>Пароль
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary text-white fs-5 py-3">  
+                                    <i class="bi bi-key"></i>
+                                </span>
+                                <input type="password" 
+                                       name="password" 
+                                       class="form-control form-control-lg border-secondary" 
+                                       id="id_password"
+                                       placeholder="Введите ваш пароль"
+                                       required>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mb-4 mt-4">  
+                            <button type="submit" class="btn btn-dark btn-lg py-3 fs-5">  
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Войти
+                            </button>
+                        </div>
+
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 20px;  
+        background-color: #f8f9fa;
+    }
+    .card-header {
+        border-radius: 20px 20px 0 0 !important;  
+        background: linear-gradient(135deg,rgb(30, 32, 33),rgb(69, 72, 75));
+    }
+    .input-group-text {
+        background-color: #6c757d !important;
+        color: white !important;
+        border-color: #6c757d !important;
+        min-width: 50px;  
+        justify-content: center;
+    }
+    .form-control, .form-control-lg {
+        height: calc(2.5em + 1rem + 2px);  
+        padding: 0.5rem 1rem;
+        font-size: 1.25rem;  
+    }
+    .form-control:focus {
+        border-color: #495057;
+        box-shadow: 0 0 0 0.3rem rgba(108, 117, 125, 0.25);  
+    }
+    .btn-dark {
+        background-color: #343a40;
+        border-color: #343a40;
+        letter-spacing: 0.5px;  
+    }
+    .btn-dark:hover {
+        background-color: #23272b;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    label {
+        margin-bottom: 0.8rem !important;  
+    }
+</style>
+{% endblock %}
