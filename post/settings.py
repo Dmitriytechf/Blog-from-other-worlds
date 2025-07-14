@@ -32,9 +32,15 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-# Application definition
+# Настройки капчи
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+CAPTCHA_LENGTH = 6
+CAPTCHA_FONT_SIZE = 52
+CAPTCHA_IMAGE_SIZE = (500, 200)
+
 
 INSTALLED_APPS = [
+    'captcha',
     'jazzmin', # Создание кастомной админки
     'crispy_forms',
     'crispy_bootstrap5',

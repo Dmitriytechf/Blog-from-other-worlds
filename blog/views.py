@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect,  get_object_or_404
-from .models import Post
-from .forms import PostForm, CustomUserCreationForm
+from .models import Post, Comment
+from .forms import PostForm, CustomUserCreationForm, CommentForm
 from django.utils import timezone
 from django.contrib.auth import login
-
+from django.views.generic import TemplateView
 
 
 def post_blog(request):
@@ -16,7 +16,37 @@ def post_blog(request):
 def post_detail(request, slug):
     '''Страница с отдельным постом'''
     post = get_object_or_404(Post, slug=slug, is_published=True)
-    return render(request, 'blog/post_detail.html', {'post': post})
+    comments = post.comments.all() # Все комментарии к посту
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('post_detail', slug=post.slug)
+    else:
+        form = CommentForm()
+
+    return render(request, 'blog/post_detail.html', 
+                  {'post': post,
+                   'comments': comments,
+                   'form': form})
+
+
+class OProjectView(TemplateView):
+    template_name = 'blog/o_proj.html'
+
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    if  request.user == comment.author or request.user.is_superuser:
+        post_slug = comment.post.slug
+        comment.delete()
+        return redirect('post_detail', slug=post_slug)
+    return redirect('post_detail', slug=post_slug)
 
 
 @login_required
@@ -72,12 +102,12 @@ def register(request):
     if request.method == 'POST':
         form =  CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.first_name = form.cleaned_data['first_name']
+            user = form.save()
             user.save()
             login(request, user)
             return redirect('home')
     else:
         form =  CustomUserCreationForm()
         
-    return render(request, 'blog/register.html', {'form': form}) 
+    return render(request, 'blog/register.html', {'form': form})
+

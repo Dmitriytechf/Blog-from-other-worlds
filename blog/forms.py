@@ -1,17 +1,17 @@
 from django import forms
-from .models import Post
+from .models import Post, Comment
 from django.utils.text import slugify
 import re
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+from captcha.fields import CaptchaField
 
 
 User = get_user_model()
 
 
 class PostForm(forms.ModelForm):
-    
     class Meta:
         model = Post
         fields = ['title', 'content', 'is_published', 'image']  # Какие поля включить
@@ -30,18 +30,14 @@ class PostForm(forms.ModelForm):
 
 
 class CustomUserCreationForm(UserCreationForm):
-    first_name = forms.CharField(
-        max_length=30,
-        required=True,
-        label=_("Имя"),
-        error_messages={
-            'required': _('Это поле обязательно для заполнения.'),
-        }
-    )
+    email = forms.EmailField(label=_('Email'), required=True, 
+                             widget=forms.EmailInput(attrs={'placeholder': 'Введите ваш email'}))
+    captcha = CaptchaField(label="Введите текст с картинки",
+                           error_messages={'invalid': _('Неправильный текст с картинки')})
     
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'password1', 'password2')
+        fields = ('username', 'password1', 'password2')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -50,20 +46,13 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['password1'].widget.attrs.update({'placeholder': 'Создайте пароль'})
         self.fields['password2'].widget.attrs.update({'placeholder': 'Повторите пароль'})
         
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.first_name = self.cleaned_data['first_name']
-        if commit:
-            user.save()
-        return user
-        
         
     error_messages = {
         'password_mismatch': _('Пароли не совпадают.'),
     }
     
     username = forms.CharField(
-        label=_("Имя пользователя"),
+        label=_("Имя странника"),
         error_messages={
             'required': _('Это поле обязательно для заполнения.'),
             'max_length': _('Не более 150 символов.'),
@@ -79,6 +68,7 @@ class CustomUserCreationForm(UserCreationForm):
             'required': _('Это поле обязательно для заполнения.'),
         },
         help_text=_(
+            '<h6>Каким должен быть пароль: </h6>'
             '<ul>'
             '<li>Ваш пароль не должен быть слишком похож на другую личную информацию.</li>'
             '<li>Пароль должен содержать не менее 8 символов.</li>'
@@ -95,3 +85,19 @@ class CustomUserCreationForm(UserCreationForm):
             'required': _('Это поле обязательно для заполнения.'),
         }
     )
+    
+class CommentForm(forms.ModelForm):
+    
+    class Meta:
+        model = Comment
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 5,  
+                'class': 'form-control',
+                'placeholder': 'Пишите здесь...'
+            }),
+        }
+        labels = {
+            'text': 'Текст комментария:',
+        }

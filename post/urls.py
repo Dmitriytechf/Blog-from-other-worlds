@@ -26,5 +26,6 @@ handler404 = custom_page_not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('blog.urls'))
+    path('captcha/', include('captcha.urls')),
+    path('', include('blog.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

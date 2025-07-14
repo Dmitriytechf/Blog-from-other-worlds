@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="card post-content-card mb-4" style="background-color: #f5f5f5; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); width: 800px; margin: 20px auto; padding: 30px;">
+    <div class="card-body">
+        <div class="post-content" style="font-family: 'Georgia', serif; font-size: 22px; line-height: 1.7; color: #333;">
+            <p style="margin-bottom: 1.2em;">
+                Удивительное это дело... Быть странником в других мирах, путешествовать по 
+                бескрайним просторам, видеть судьбы Галактик... А ведь про это еще можно
+                и написать, обрамляя в слова целые Вселенные! Невероятные приключения ждут 
+                каждого путника, кто только решит отправиться в приключения по далеким-далеким Галактикам.
+                Кто отважно примет вызов судьбы, освободит сознание от предрассудков и отправится
+                покорять трансцендентные измерения...
+            </p>
+            <p style="margin-bottom: 0; font-weight: 500;">
+                Но ведь каждый из нас способен стать таким странником, не так ли?
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
