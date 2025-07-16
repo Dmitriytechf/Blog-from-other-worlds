@@ -40,9 +40,9 @@ CAPTCHA_IMAGE_SIZE = (500, 200)
 
 
 INSTALLED_APPS = [
-    'captcha',
+    'captcha', # Капча для регистрации
     'jazzmin', # Создание кастомной админки
-    'crispy_forms',
+    'crispy_forms', # Красивые формы заполнения
     'crispy_bootstrap5',
     
     'django.contrib.admin',

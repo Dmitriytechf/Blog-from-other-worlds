@@ -36,8 +36,23 @@
                     <div class="post-content">
                         {{ post.content|linebreaks }}
                     </div>
+                    
+                   <div class="d-flex align-items-center mt-3 pt-3 border-top">
+                        <button 
+                            type="button" 
+                            class="btn btn-sm like-button {% if is_liked %}liked{% endif %}"
+                            data-post-id="{{ post.id }}"
+                            id="post-like-button"
+                        >
+                            <i class="{% if is_liked %}fas{% else %}far{% endif %} fa-heart"></i>
+                            <span class="ms-1 like-count">{{ post.like_count }}</span>
+                        </button>
+                        <span class="text-muted small" id="like-message">
+                            {% if post.like_count == 0 %}Будьте первым!{% endif %}
+                        </span>
+                    </div>
                 </div>
-            </div>  
+            </div>
 
             <!-- Секция комментариев -->
             <div class="card mb-4 border-0">
@@ -56,12 +71,24 @@
                                 <small class="text-muted">{{ comment.created_at|date:"d M Y H:i" }}</small>
                             </div>
                             <p class="card-text">{{ comment.text }}</p>
-                            {% if request.user == comment.author or request.user.is_superuser %}
-                                <form method="POST" action="{% url 'delete_comment' comment.id %}" class="d-inline">
+
+                            <div class="d-flex align-items-center">  
+                                <button 
+                                    type="button" 
+                                    class="btn btn-sm like-button {% if comment.is_liked_by_user %}liked{% endif %}"
+                                    data-comment-id="{{ comment.id }}"
+                                >
+                                    <i class="{% if comment.is_liked_by_user %}fas{% else %}far{% endif %} fa-heart"></i>
+                                    <span class="ms-1 like-count">{{ comment.like_count }}</span>
+                                </button>
+
+                                {% if request.user == comment.author or request.user.is_superuser %}
+                                <form method="POST" action="{% url 'delete_comment' comment.id %}" class="ms-2">  <!-- Изменил me-2 на ms-2 -->
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-danger ms-2">Удалить</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
                                 </form>
-                            {% endif %}
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     {% empty %}
@@ -116,7 +143,65 @@
                 </div>
             </div>  
         </div>  
-    </div>  
+    </div>
+<script>
+$(document).ready(function() {
+    $('.like-button').click(function() {
+        const button = $(this);
+        const postId = button.data('post-id');
+        const commentId = button.data('comment-id');
+        
+        // Определяем URL в зависимости от того, лайкаем пост или комментарий
+        let url;
+        if (postId) {
+            url = "{% url 'toggle_like' 0 %}".replace('0', postId);
+        } else {
+            url = "{% url 'toggle_comment_like' 0 %}".replace('0', commentId);
+        }
+        
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response) {
+                // Обновляем иконку
+                const icon = button.find('i');
+                icon.toggleClass('far fas');
+                
+                // Обновляем счётчик
+                const likeCount = button.find('.like-count');
+                likeCount.text(response.like_count);
+                
+                // Обновляем сообщение
+                if (postId) {
+                    const likeMessage = $('#like-message');
+                    if (response.like_count == 0) {
+                        likeMessage.text('Будьте первым!');
+                    } else {
+                        likeMessage.text('');
+                    }
+                }
+                
+                // Добавляем/убираем класс liked
+                button.toggleClass('liked');
+                
+                // Анимация
+                icon.css('transform', 'scale(1.2)');
+                setTimeout(() => {
+                    icon.css('transform', 'scale(1)');
+                }, 300);
+            },
+            error: function(xhr) {
+                if (xhr.status == 403) {
+                    window.location.href = "{% url 'login' %}";
+                }
+            }
+        });
+    });
+});
+</script>
 </div>  
 
 <style>
@@ -159,6 +244,45 @@
     
     .post-content p {
         margin-bottom: 1.5rem;
+    }
+
+    * Стили для кнопки лайка */
+    .like-button {
+        background-color: transparent !important;
+        border: 1px solid #dee2e6 !important;
+        color: #6c757d !important;
+        transition: all 0.3s ease;
+    }
+
+    .like-button:hover {
+        border-color: #dc3545 !important;
+        color: #dc3545 !important;
+    }
+
+    .like-button.liked {
+        color: #dc3545 !important;
+    }
+
+    .like-button.liked i {
+        color: #dc3545 !important;
+    }
+
+    /* Анимация сердца */
+    @keyframes heartBeat {
+        0% { transform: scale(1); }
+        25% { transform: scale(1.2); }
+        50% { transform: scale(1); }
+        75% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+
+    .like-button.liked i {
+        animation: heartBeat 0.6s;
+    }
+
+    /* Плавное изменение цвета сердца */
+    .fa-heart {
+        transition: color 0.3s ease;
     }
     
     @media (max-width: 768px) {

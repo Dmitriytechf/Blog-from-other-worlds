@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect,  get_object_or_404
-from .models import Post, Comment
+from .models import Post, Comment, Like
 from .forms import PostForm, CustomUserCreationForm, CommentForm
 from django.utils import timezone
 from django.contrib.auth import login
 from django.views.generic import TemplateView
-
+from django.contrib.contenttypes.models import ContentType
+from django.http import JsonResponse
 
 def post_blog(request):
     '''Главная страница с постами'''
@@ -17,6 +18,14 @@ def post_detail(request, slug):
     '''Страница с отдельным постом'''
     post = get_object_or_404(Post, slug=slug, is_published=True)
     comments = post.comments.all() # Все комментарии к посту
+    
+    # Проверка лайка для поста
+    is_liked = False
+    if request.user.is_authenticated:
+        is_liked=post.is_liked_by(request.user)
+    
+    for comment in comments:
+        comment._current_user = request.user
     
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -31,8 +40,10 @@ def post_detail(request, slug):
 
     return render(request, 'blog/post_detail.html', 
                   {'post': post,
+                   'user': request.user,
                    'comments': comments,
-                   'form': form})
+                   'form': form,
+                   'is_liked': is_liked})
 
 
 class OProjectView(TemplateView):
@@ -111,3 +122,41 @@ def register(request):
         
     return render(request, 'blog/register.html', {'form': form})
 
+
+def toggle_like(request, post_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    post = Post.objects.get(id=post_id)
+    content_type = ContentType.objects.get_for_model(Post)
+    
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        content_type=content_type,
+        object_id=post.id
+    )
+    if not created:
+        like.delete() 
+    
+    return JsonResponse({
+            'like_count': post.like_count,
+            'is_liked': created
+        })
+
+def toggle_comment_like(request, comment_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    comment = Comment.objects.get(id=comment_id)
+    content_type = ContentType.objects.get_for_model(Comment)
+    
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        content_type=content_type,
+        object_id=comment.id
+    )
+    if not created:
+        like.delete() 
+    
+    return JsonResponse({
+        'like_count': comment.like_count,
+        'is_liked': created
+    })

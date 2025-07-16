@@ -4,6 +4,8 @@ from django.utils.text import slugify
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 User = get_user_model() 
@@ -38,7 +40,20 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('post_detail', kwargs={'slug': self.slug})
 
-        
+    @property
+    def like_count(self):
+        return Like.objects.filter(content_type=ContentType.objects.get_for_model(self),
+            object_id=self.id).count()
+    
+    def is_liked_by(self, user):
+        if not user.is_authenticated:
+            return False
+        return Like.objects.filter(
+            content_type=ContentType.objects.get_for_model(self),
+            object_id=self.id,
+            user=user
+        ).exists()
+    
     def __str__(self):
         return self.title
     
@@ -55,5 +70,44 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     
+    @property
+    def like_count(self):
+        return Like.objects.filter(
+            content_type=ContentType.objects.get_for_model(self),
+            object_id=self.id
+        ).count()
+        
+    @property
+    def is_liked_by_user(self):
+        # Проверяем, передан ли пользователь в контексте комментария
+        if not hasattr(self, '_current_user'):
+            return False
+        return self.is_liked_by(self._current_user)
+    
+    def is_liked_by(self, user):
+        if not user.is_authenticated:
+            return False
+        return Like.objects.filter(
+            content_type=ContentType.objects.get_for_model(self),
+            object_id=self.id,
+            user=user
+        ).exists()
+
     def __str__(self):
         return f'{self.author} - {self.post}'
+
+
+class Like(models.Model):
+    '''Класс лайков'''
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'content_type', 'object_id')
+        indexes = [
+            models.Index(fields=['content_type', 'object_id']),
+        ]
+    
