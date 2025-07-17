@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container mt-5">
@@ -13,7 +14,7 @@
                         <!-- Заголовок -->
                         <div class="mb-4">
                             <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">Заголовок</label>
-                            {{ form.title }}
+                            {{ form.title|as_crispy_field }}
                         </div>
                         
                         <!-- Текущее изображение -->
@@ -37,14 +38,14 @@
                             <label for="{{ form.image.id_for_label }}" class="form-label fw-bold">
                                 {% if post.image %}Заменить изображение{% else %}Добавить изображение{% endif %}
                             </label>
-                            {{ form.image }}
-                            <div class="form-text">Рекомендуемый размер: 1200×600px. Форматы: JPG, PNG.</div>
+                            {{ form.image|as_crispy_field }}
+                            <div class="form-text">Рекомендуемый форматы: JPG, PNG.</div>
                         </div>
                         
                         <!-- Содержание -->
                         <div class="mb-4">
                             <label for="{{ form.content.id_for_label }}" class="form-label fw-bold">Содержание</label>
-                            {{ form.content }}
+                            {{ form.content|as_crispy_field }}
                         </div>
                         
                         <!-- Статус публикации -->

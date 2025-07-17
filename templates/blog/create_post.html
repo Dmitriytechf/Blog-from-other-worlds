@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container py-5">
@@ -17,7 +18,7 @@
                         <!-- Заголовок -->
                         <div class="mb-4">
                             <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">Заголовок поста</label>
-                            {{ form.title }}
+                            {{ form.title|as_crispy_field }}
                             {% if form.title.errors %}
                                 <div class="invalid-feedback d-block">
                                     {{ form.title.errors }}
@@ -36,7 +37,7 @@
                                     <label for="id_image" class="btn btn-dark ms-3 mb-0">
                                         <i class="fas fa-folder-open me-2"></i>Выбрать файл
                                     </label>
-                                    {{ form.image }}
+                                    {{ form.image|as_crispy_field }}
                                 </div>
                             </div>
                             <div class="form-text mt-2">Рекомендуемый размер: 1200×600px. Форматы: JPG, PNG (необязательно)</div>
@@ -50,7 +51,7 @@
                         <!-- Содержание -->
                         <div class="mb-4">
                             <label for="{{ form.content.id_for_label }}" class="form-label fw-bold">Содержание поста</label>
-                            {{ form.content }}
+                            {{ form.content|as_crispy_field }}
                             {% if form.content.errors %}
                                 <div class="invalid-feedback d-block">
                                     {{ form.content.errors }}

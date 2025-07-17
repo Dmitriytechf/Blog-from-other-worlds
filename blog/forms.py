@@ -12,11 +12,18 @@ User = get_user_model()
 
 
 class PostForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.fields['title'].label = False
+        self.fields['image'].label = False
+        self.fields['content'].label = False
+    
     class Meta:
         model = Post
         fields = ['title', 'content', 'is_published', 'image']  # Какие поля включить
         widgets = {  # Как отображать поля
-            'content': forms.Textarea(attrs={'rows': 5}),
+            'content': forms.Textarea(attrs={'rows': 8}),
         }
         labels = {  # Какие подписи использовать
             'is_published': 'Опубликовать сразу'
@@ -87,6 +94,10 @@ class CustomUserCreationForm(UserCreationForm):
     )
     
 class CommentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.fields['text'].label = False
     
     class Meta:
         model = Comment
@@ -97,7 +108,4 @@ class CommentForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Пишите здесь...'
             }),
-        }
-        labels = {
-            'text': 'Текст комментария:',
         }

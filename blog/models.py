@@ -110,4 +110,3 @@ class Like(models.Model):
         indexes = [
             models.Index(fields=['content_type', 'object_id']),
         ]
-    

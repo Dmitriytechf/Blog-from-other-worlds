@@ -17,6 +17,8 @@ def post_blog(request):
 def post_detail(request, slug):
     '''Страница с отдельным постом'''
     post = get_object_or_404(Post, slug=slug, is_published=True)
+    next_post = Post.objects.filter(created_date__gt=post.created_date).order_by('created_date').first()
+    previous_post = Post.objects.filter(created_date__lt=post.created_date).order_by('-created_date').first()
     comments = post.comments.all() # Все комментарии к посту
     
     # Проверка лайка для поста
@@ -43,7 +45,9 @@ def post_detail(request, slug):
                    'user': request.user,
                    'comments': comments,
                    'form': form,
-                   'is_liked': is_liked})
+                   'is_liked': is_liked,
+                   'next_post': next_post,
+                   'previous_post': previous_post})
 
 
 class OProjectView(TemplateView):
