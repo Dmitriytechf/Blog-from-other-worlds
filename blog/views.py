@@ -1,17 +1,23 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect,  get_object_or_404
-from .models import Post, Comment, Like
-from .forms import PostForm, CustomUserCreationForm, CommentForm
-from django.utils import timezone
 from django.contrib.auth import login
-from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+from django.views.generic import TemplateView
+
+from .forms import CommentForm, CustomUserCreationForm, PostForm
+from .models import Comment, Like, Post
+
 
 def post_blog(request):
     '''Главная страница с постами'''
-    posts = Post.objects.filter(is_published=True)
-    return render(request, 'blog/blog.html', {'posts': posts})
+    posts = Post.objects.filter(is_published=True).order_by('-published_date')
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'blog/blog.html', {'page_obj': page_obj})
 
 
 def post_detail(request, slug):
