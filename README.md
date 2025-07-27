@@ -13,19 +13,19 @@
 
 
 ## 🛠️ Стек технологий
+
 ### Основные технологии
+![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-4.2-092E20?logo=django&logoColor=white)
 ![Django REST](https://img.shields.io/badge/Django_REST-3.14-ff1709?logo=django&logoColor=white)
-
-### Основные языки программирования
-![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?logo=javascript&logoColor=black)
 
 ### Тестирование
-![Pytest](https://img.shields.io/badge/Pytest-8.4.0-0A9EDC)
-![Pytest Django](https://img.shields.io/badge/Pytest_Django-4.11.1-4B32C3)
+![Pytest](https://img.shields.io/badge/Pytest-8.4.0-blue.svg)
+![Pytest Django](https://img.shields.io/badge/Pytest-8.4.0-blue.svg)
+
 
 
 
