@@ -23,8 +23,8 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?logo=javascript&logoColor=black)
 
 ### Тестирование
-![Pytest](https://img.shields.io/badge/Pytest-8.4.0-blue.svg)
-![Pytest Django](https://img.shields.io/badge/Pytest-8.4.0-blue.svg)
+![Pytest](https://img.shields.io/badge/Pytest-8.4.0-0A9EDC)
+![Pytest Django](https://img.shields.io/badge/Pytest_Django-4.11.1-4B32C3)
 
 
 
