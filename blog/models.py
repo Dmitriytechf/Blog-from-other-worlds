@@ -93,7 +93,7 @@ class Comment(models.Model):
         ).exists()
 
     def __str__(self):
-        return f'{self.author} - {self.post}'
+        return f'Автор комментария: {self.author}. Пост: {self.post}'
 
 
 class Like(models.Model):

@@ -14,6 +14,8 @@ ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
+    'rest_framework.authtoken',
+    'djoser', # регистрация для API
     'drf_yasg', # для документации к API
     'rest_framework', # для работы с API
     'captcha', # Капча для регистрации
@@ -127,13 +129,27 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',  # Для сайта
+        'rest_framework.authentication.TokenAuthentication',    # Для API
+    ),
     # # Настройки прав доступа
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',  
-    # ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  
+    ],
     # Где доступен API
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',  # Можно отключить для production
     ],
+    
+    # Ограничение запросов
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '1000/hour',  # Лимит для UserRateThrottle
+        'anon': '10000/day',  # Лимит для AnonRateThrottle
+    }
 }

@@ -5,6 +5,7 @@ from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from django.contrib.auth.views import LoginView, LogoutView
 
 from blog.views import custom_page_not_found
 
@@ -30,6 +31,8 @@ urlpatterns = [
     path('captcha/', include('captcha.urls')),
     path('', include('blog.urls')),
     path('api/', include('api.urls')),
+    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     # Подключи документацию к API
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
