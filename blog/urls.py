@@ -1,7 +1,7 @@
-from .views import *
-from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.urls import path
 
+from .views import *
 
 urlpatterns = [
     path('', post_blog, name='home'),

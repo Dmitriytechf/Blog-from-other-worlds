@@ -1,12 +1,13 @@
-from django import forms
-from .models import Post, Comment
-from django.utils.text import slugify
 import re
-from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import get_user_model
-from captcha.fields import CaptchaField
 
+from captcha.fields import CaptchaField
+from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
+
+from .models import Comment, Post
 
 User = get_user_model()
 
@@ -92,7 +93,8 @@ class CustomUserCreationForm(UserCreationForm):
             'required': _('Это поле обязательно для заполнения.'),
         }
     )
-    
+
+  
 class CommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
