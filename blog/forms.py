@@ -22,7 +22,7 @@ class PostForm(forms.ModelForm):
     
     class Meta:
         model = Post
-        fields = ['title', 'content', 'is_published', 'image']  # Какие поля включить
+        fields = ['title', 'content', 'is_published', 'image', 'slug']  # Какие поля включить
         widgets = {  # Как отображать поля
             'content': forms.Textarea(attrs={'rows': 8}),
         }

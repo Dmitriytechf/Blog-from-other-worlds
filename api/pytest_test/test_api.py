@@ -4,7 +4,9 @@ from django.urls import reverse
 from blog.models import Post, Comment
 
 
-@pytest.mark.django_db
+pytestmark = pytest.mark.django_db
+
+
 def test_api_get_postlist(api_client):
     """
     Тест получение списка постов через API.
@@ -18,7 +20,6 @@ def test_api_get_postlist(api_client):
     assert 'results' in data
 
 
-@pytest.mark.django_db
 def test_api_get_post_pk(auth_client, simple_post):
     """
     Тест получение конкретного поста по ID.
@@ -32,7 +33,6 @@ def test_api_get_post_pk(auth_client, simple_post):
     assert data['content'] == simple_post.content
     
 
-@pytest.mark.django_db
 def test_api_get_commentlist_pk(api_client, post_with_comments):
     """
     Тест проверяет:
@@ -53,7 +53,6 @@ def test_api_get_commentlist_pk(api_client, post_with_comments):
 
 
 
-@pytest.mark.django_db
 def test_api_get_comment_pk(api_client, post_with_comments):
     """Тест првоеряет: 
     1. Анонимный пользователь может получить один комментарий
@@ -70,7 +69,6 @@ def test_api_get_comment_pk(api_client, post_with_comments):
     assert response.json()['text'] == comment.text
 
 
-@pytest.mark.django_db
 def test_create_comment_authenticated(auth_client, post_with_comments):
     """
     Тест успешного создания комментария авторизованным пользователем
@@ -87,7 +85,6 @@ def test_create_comment_authenticated(auth_client, post_with_comments):
     assert response.json()['text'] == data['text']
 
 
-@pytest.mark.django_db
 def test_create_comment_unauthenticated(api_client, post_with_comments):
     """
     Тест попытки создания комментария без авторизации

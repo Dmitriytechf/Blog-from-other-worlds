@@ -124,7 +124,7 @@
                                 </button>
 
                                 {% if request.user == comment.author or request.user.is_superuser %}
-                                <form method="POST" action="{% url 'delete_comment' comment.id %}" class="ms-2">  <!-- Изменил me-2 на ms-2 -->
+                                <form method="POST" action="{% url 'delete_comment' comment.id %}" class="ms-2">  
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
                                 </form>

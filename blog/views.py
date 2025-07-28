@@ -25,6 +25,7 @@ def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, is_published=True)
     next_post = Post.objects.filter(created_date__gt=post.created_date).order_by('created_date').first()
     previous_post = Post.objects.filter(created_date__lt=post.created_date).order_by('-created_date').first()
+    
     comments = post.comments.all() # Все комментарии к посту
     
     # Проверка лайка для поста
@@ -56,18 +57,22 @@ def post_detail(request, slug):
                    'previous_post': previous_post})
 
 
-class OProjectView(TemplateView):
-    template_name = 'blog/o_proj.html'
-
-
 def delete_comment(request, comment_id):
+    """
+    Удаляет комментарий если пользователь автор или суперюзер.
+    """
     comment = get_object_or_404(Comment, id=comment_id)
+    post_slug = comment.post.slug 
     
     if  request.user == comment.author or request.user.is_superuser:
         post_slug = comment.post.slug
         comment.delete()
         return redirect('post_detail', slug=post_slug)
     return redirect('post_detail', slug=post_slug)
+
+
+class OProjectView(TemplateView):
+    template_name = 'blog/o_proj.html'
 
 
 @login_required
@@ -86,7 +91,7 @@ def create_post(request):
     
     return render(request, 'blog/create_post.html', {'form': form})    
     
-    
+
 @login_required
 def edit_post(request, slug):
     post = get_object_or_404(Post, slug=slug, author=request.user)
