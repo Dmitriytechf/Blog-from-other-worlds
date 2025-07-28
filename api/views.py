@@ -26,7 +26,8 @@ class PostAPIView(viewsets.ReadOnlyModelViewSet):
 class CommentAPIView(viewsets.ModelViewSet):
     """
     API для работы с комментариями к посту.
-    Только автор может редактировать/удалять свои комментарии.
+    Только автор может редактировать/удалять/создавать
+    свои комментарии. Нужна авторизация для выполнения действий
     """
     serializer_class = CommentSerializers
     # Добавление кастомного пермишена
@@ -43,7 +44,7 @@ class CommentAPIView(viewsets.ModelViewSet):
         return Comment.objects.filter(
             post_id=self.kwargs['post_id']
         ).select_related('author').order_by('created_at')
-    
+
     def perform_create(self, serializer):
         serializer.save(
             author=self.request.user, 
