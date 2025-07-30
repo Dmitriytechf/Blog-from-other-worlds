@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.generic import TemplateView
+from django.contrib.contenttypes.models import ContentType
 
 from .forms import CommentForm, CustomUserCreationForm, PostForm
 from .models import Comment, Like, Post
@@ -15,8 +16,15 @@ from .models import Comment, Like, Post
 def post_blog(request):
     '''Главная страница с постами'''
     search_query = request.GET.get('q', '') # получаем поисковой запрос
-    # Что показываем на странице
-    posts = Post.objects.filter(is_published=True).order_by('-published_date')
+    sort_option = request.GET.get('sort', '-published_date') # параметры сортировки
+
+    posts = Post.objects.filter(is_published=True)
+    
+    if sort_option in ['-published_date', 'published_date', 'title',
+                       '-title']:
+        posts = posts.order_by(sort_option)
+    else:
+        posts = posts.order_by('-published_date')
 
     # Фильтрация поиска, если запрос существует
     if search_query:
@@ -33,7 +41,8 @@ def post_blog(request):
 
     return render(request, 'blog/blog.html', 
                   {'page_obj': page_obj,
-                   'search_query': search_query})
+                   'search_query': search_query,
+                   'current_sort': sort_option})
 
 
 def post_detail(request, slug):
