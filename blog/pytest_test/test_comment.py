@@ -5,7 +5,6 @@ from django.urls import reverse
 
 from blog.models import Comment, Like
 
-
 pytestmark = pytest.mark.django_db
 
 

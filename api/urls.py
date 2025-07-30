@@ -1,8 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import PostAPIView, CommentAPIView
-
+from .views import CommentAPIView, PostAPIView
 
 v1_router = DefaultRouter()
 v1_router.register('post', PostAPIView, basename='post')

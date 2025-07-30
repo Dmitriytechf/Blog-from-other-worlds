@@ -1,15 +1,13 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-from django.contrib.auth.views import LoginView, LogoutView
 
 from blog.views import custom_page_not_found
-
-handler404 = custom_page_not_found 
 
 # Конфигурация Swagger/OpenAPI
 schema_view = get_schema_view(
@@ -25,6 +23,7 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+handler404 = custom_page_not_found 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,6 +32,7 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('test-404/', lambda request: custom_page_not_found(request, None)),
     # Подключи документацию к API
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

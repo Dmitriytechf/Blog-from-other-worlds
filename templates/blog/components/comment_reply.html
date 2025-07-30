@@ -1,0 +1,65 @@
+{% load crispy_forms_tags %}
+
+<div class="comment-reply" style="margin-left: {% if comment.parent %}50px{% else %}0{% endif %};">
+    <div class="card border-0 shadow-sm mb-2" 
+         style="background-color: {% if comment.parent %}rgba(0, 0, 0, 0.07){% else %}#ffffff{% endif %};">
+        <div class="card-body">
+            <!-- Заголовок комментария -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="card-title mb-0">
+                    <span class="badge bg-primary rounded-pill">
+                        {{ comment.author.username }}
+                    </span>
+                </h5>
+                <small class="text-muted">{{ comment.created_at|date:"d M Y H:i" }}</small>
+            </div>
+
+            <!-- Текст комментария -->
+            <p class="card-text">{{ comment.text }}</p>
+
+            <!-- Кнопки действий -->
+            <div class="d-flex align-items-center">  
+                <button type="button" class="btn btn-sm like-button {% if comment.is_liked_by_user %}liked{% endif %}"
+                        data-comment-id="{{ comment.id }}">
+                    <i class="{% if comment.is_liked_by_user %}fas{% else %}far{% endif %} fa-heart"></i>
+                    <span class="ms-1 like-count">{{ comment.like_count }}</span>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-outline-secondary ms-2 reply-button"
+                        data-comment-id="{{ comment.id }}">
+                    <i class="fas fa-reply me-1"></i> Ответить
+                </button>
+
+                {% if request.user == comment.author or request.user.is_superuser %}
+                <form method="POST" action="{% url 'delete_comment' comment.id %}" class="ms-2">  
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                </form>
+                {% endif %}
+            </div>
+
+            <!-- Форма ответа -->
+            <div id="reply-form-{{ comment.id }}" class="mt-3" style="display: none;">
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                    <div class="mb-2">
+                        {{ form.text|as_crispy_field }}
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fas fa-paper-plane me-1"></i> Отправить ответ
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary ms-2 cancel-reply" 
+                            data-comment-id="{{ comment.id }}">
+                        Отмена
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Вложенные ответы -->
+    {% for reply in comment.replies.all %}
+        {% include "blog/components/comment_reply.html" with comment=reply %}
+    {% endfor %}
+</div>

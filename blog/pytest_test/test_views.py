@@ -3,8 +3,7 @@ from http import HTTPStatus
 import pytest
 from django.urls import reverse
 
-from blog.models import Post
-
+from blog.models import Like, Post
 
 pytestmark = pytest.mark.django_db
 
@@ -15,7 +14,15 @@ def test_post_blog_view(client):
     response = client.get(url)
     
     assert response.status_code == HTTPStatus.OK
-    
+
+
+def test_o_proj_view(client):
+    '''Тест захода на странцу о проекте'''
+    url = reverse('o_proj')
+    response = client.get(url)
+
+    assert response.status_code == HTTPStatus.OK
+
     
 def test_post_detail_view_with_valid_slug(client, post):
     """
@@ -62,7 +69,7 @@ def test_create_post_auth_user(auth_client, user):
 
 def test_create_post_anon_user(client):
     """
-    Тест: авторизованный пользователь может опубликовать пост
+    Тест: анонимный пользователь не может опубликовать пост
     """
     url = reverse('create_post')
     response = client.get(url)
@@ -97,7 +104,7 @@ def test_edit_post_by_author(auth_client, user, post):
 
 def test_edit_post_by_other_author(auth_client, user, another_user, post):
     """
-    Тест: автор может редактировать свой пост
+    Тест: другой пользователь не может редактировать чужой пост
     """
     post.author = another_user
     post.save()
@@ -147,3 +154,29 @@ def test_delete_post_by_other_user(auth_client, another_user, post):
     response = auth_client.post(url)
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert Post.objects.filter(id=post.id).exists()
+
+
+def test_toggle_like_create(auth_client, post):
+    """
+    Тест: авторизованный пользователь может поставить лайк
+    """
+    url = reverse('toggle_like', kwargs={'post_id': post.id})
+    # Ставим лайк
+    response = auth_client.post(url)
+    assert response.status_code == HTTPStatus.OK
+    assert response.json()['is_liked'] == True
+    assert response.json()['like_count'] == 1
+
+
+def test_toggle_like_delete(auth_client, post):
+    """
+    Тест: авторизованный пользователь может удаления лайк
+    """
+    url = reverse('toggle_like', kwargs={'post_id': post.id})
+
+    auth_client.post(url)
+    response = auth_client.post(url)
+    # Удаляем лайк
+    assert response.status_code == HTTPStatus.OK
+    assert response.json()['is_liked'] == False
+    assert response.json()['like_count'] == 0

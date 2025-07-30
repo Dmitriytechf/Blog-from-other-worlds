@@ -8,6 +8,18 @@
         <div class="col-lg-8">  
             <h1 class="my-4 text-center">Последние посты</h1>
 
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-10">
+                    <form method="get" action="{% url 'home' %}" class="d-flex shadow-sm">
+                        <input type="text" name="q" class="form-control form-control-lg me-1 py-2" 
+                        placeholder="Поиск" value="{{ request.GET.q }}">
+                        <button type="submit" class="btn btn-primary px-3 py-2">
+                            <i class="fas fa-search "></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
             {% if page_obj %}
                 {% for post in page_obj %}
                     <div class="card mb-4 shadow-sm post-card">
@@ -35,6 +47,12 @@
                 {% endfor %}
             {% else %}
                 <div class="alert alert-info text-center">Пока нет опубликованных постов.</div>
+            {% endif %}
+
+            {% if search_query %}
+                <div class="alert alert-info text-center">
+                    <a href="{% url 'home' %}" class="ms-3">Вернуться к списку постов</a>
+                </div>
             {% endif %}
 
             <!-- Пагинация -->

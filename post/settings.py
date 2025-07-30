@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import sys
 
 from dotenv import load_dotenv
 
@@ -18,6 +19,7 @@ INSTALLED_APPS = [
     'djoser', # регистрация для API
     'drf_yasg', # для документации к API
     'rest_framework', # для работы с API
+    
     'captcha', # Капча для регистрации
     'jazzmin', # Создание кастомной админки
     'crispy_forms', # Красивые формы заполнения
@@ -63,13 +65,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'post.wsgi.application'
 
-
+# База данных
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'blogotherworld',
+        'USER': 'admin',
+        'PASSWORD': 'satoshiinaka',  
+        'HOST': 'localhost',        
+        'PORT': '5432',              
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -153,3 +160,19 @@ REST_FRAMEWORK = {
         'anon': '10000/day',  # Лимит для AnonRateThrottle
     }
 }
+
+# Логирование
+# LOGGING = {
+#     'version': 1,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         },
+#     },
+# }

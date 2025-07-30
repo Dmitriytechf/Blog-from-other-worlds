@@ -1,0 +1,72 @@
+{% load crispy_forms_tags %}
+<!-- Изображение поста -->
+            {% if post.image %}
+            <div class="post-image-container mb-4 rounded-3 overflow-hidden">
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid w-100 post-image">
+            </div>
+            {% endif %}
+            
+            <!-- Содержание поста -->
+            <div class="card post-content-card mb-4 border-0">
+                <div class="card-body p-4">
+                    <div class="post-content">
+                        {{ post.content|linebreaks }}
+                    </div>
+                    
+                   <div class="d-flex align-items-center mt-3 pt-3 border-top">
+                        <button 
+                            type="button" 
+                            class="btn btn-sm like-button {% if is_liked %}liked{% endif %}"
+                            data-post-id="{{ post.id }}"
+                            id="post-like-button"
+                        >
+                            <i class="{% if is_liked %}fas{% else %}far{% endif %} fa-heart"></i>
+                            <span class="ms-1 like-count">{{ post.like_count }}</span>
+                        </button>
+                        <span class="text-muted small" id="like-message">
+                            {% if post.like_count == 0 %}Будьте первым!{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card mb-4 border-0">
+                <div class="card-footer bg-transparent border-0 px-4 pb-4 pt-0">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> К списку постов
+                            </a>
+                            
+                            {% if previous_post %}
+                                <a href="{% url 'post_detail' previous_post.slug %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-chevron-left me-1"></i> Назад
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        {% if user == post.author %}
+                            <div class="d-flex align-items-center gap-2 mx-auto">
+                                <a href="{% url 'edit_post' post.slug %}" class="btn btn-outline-warning">
+                                    <i class="fas fa-edit me-1"></i> Редактировать
+                                </a>
+                                <form action="{% url 'delete_post' post.slug %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        <i class="fas fa-trash-alt me-1"></i> Удалить
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
+
+                        {% if next_post %}
+                            <div class="d-flex align-items-center ms-auto">
+                                <a href="{% url 'post_detail' next_post.slug %}" class="btn btn-outline-primary">
+                                    Вперед <i class="fas fa-chevron-right ms-1"></i>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>

@@ -1,17 +1,20 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from rest_framework import filters, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
-from rest_framework import filters
 
-from blog.models import Post, Comment
-from .serializers import PostSerializers, CommentSerializers
+from blog.models import Comment, Post
+
 from .permissions import IsAuthorOrReadOnly
+from .serializers import CommentSerializers, PostSerializers
 
 
 class PostAPIView(viewsets.ReadOnlyModelViewSet):
     """
-    API для просмотра постов. Доступен всем пользователям.
+    API для просмотра списка постов или конкретного поста. 
+    Доступен всем пользователям.
     """
     queryset = Post.objects.all()
     serializer_class = PostSerializers
@@ -21,6 +24,15 @@ class PostAPIView(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     filter_backends = [filters.SearchFilter]
     search_fields = ['title']
+
+    # Кешируем данные API
+    @method_decorator(cache_page(60 * 15))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(60 * 15))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
 
 class CommentAPIView(viewsets.ModelViewSet):
@@ -50,3 +62,12 @@ class CommentAPIView(viewsets.ModelViewSet):
             author=self.request.user, 
             post=self.get_post()
         )
+
+    # Кешируем данные API
+    @method_decorator(cache_page(33))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(33))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)

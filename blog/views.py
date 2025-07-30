@@ -2,6 +2,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -13,11 +14,26 @@ from .models import Comment, Like, Post
 
 def post_blog(request):
     '''Главная страница с постами'''
+    search_query = request.GET.get('q', '') # получаем поисковой запрос
+    # Что показываем на странице
     posts = Post.objects.filter(is_published=True).order_by('-published_date')
+
+    # Фильтрация поиска, если запрос существует
+    if search_query:
+        posts = posts.filter(
+            Q(title__icontains=search_query) |
+            Q(content__icontains=search_query) |
+            Q(author__username__icontains=search_query)
+        )
+    
+    # Пагинация
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'blog/blog.html', {'page_obj': page_obj})
+
+    return render(request, 'blog/blog.html', 
+                  {'page_obj': page_obj,
+                   'search_query': search_query})
 
 
 def post_detail(request, slug):
@@ -25,9 +41,9 @@ def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, is_published=True)
     next_post = Post.objects.filter(created_date__gt=post.created_date).order_by('created_date').first()
     previous_post = Post.objects.filter(created_date__lt=post.created_date).order_by('-created_date').first()
-    
-    comments = post.comments.all() # Все комментарии к посту
-    
+
+    comments = post.comments.filter(parent__isnull=True)
+
     # Проверка лайка для поста
     is_liked = False
     if request.user.is_authenticated:
@@ -42,6 +58,15 @@ def post_detail(request, slug):
             comment = form.save(commit=False)
             comment.post = post
             comment.author = request.user
+            
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                try:
+                    parent_comment = Comment.objects.get(id=parent_id)
+                    comment.parent = parent_comment
+                except Comment.DoesNotExist:
+                    pass
+            
             comment.save()
             return redirect('post_detail', slug=post.slug)
     else:
@@ -58,9 +83,9 @@ def post_detail(request, slug):
 
 
 def delete_comment(request, comment_id):
-    """
+    '''
     Удаляет комментарий если пользователь автор или суперюзер.
-    """
+    '''
     comment = get_object_or_404(Comment, id=comment_id)
     post_slug = comment.post.slug 
     
@@ -72,11 +97,13 @@ def delete_comment(request, comment_id):
 
 
 class OProjectView(TemplateView):
-    template_name = 'blog/o_proj.html'
+    '''Статичная страница о проекте'''
+    template_name = 'o_proj.html'
 
 
 @login_required
 def create_post(request):
+    '''Создание поста'''
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -94,6 +121,7 @@ def create_post(request):
 
 @login_required
 def edit_post(request, slug):
+    '''Редактирование поста'''
     post = get_object_or_404(Post, slug=slug, author=request.user)
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
@@ -111,17 +139,17 @@ def edit_post(request, slug):
 
 @login_required
 def delete_post(request, slug):
+    '''Удаление поста'''
     post = get_object_or_404(Post, slug=slug, author=request.user)
     if request.method == 'POST':
         post.delete()
         return redirect('home')
     return render(request, 'blog/blog.html', {'post': post})
-    
-    
+
+
 def custom_page_not_found(request, exception):
     '''Кастомная 404 ошибка'''
     return render(request, '404.html', status=404)
-
 
 
 def register(request):
@@ -156,6 +184,7 @@ def toggle_like(request, post_id):
             'like_count': post.like_count,
             'is_liked': created
         })
+
 
 def toggle_comment_like(request, comment_id):
     if not request.user.is_authenticated:

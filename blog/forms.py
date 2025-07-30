@@ -96,6 +96,10 @@ class CustomUserCreationForm(UserCreationForm):
 
   
 class CommentForm(forms.ModelForm):
+    parent_id = forms.IntegerField(widget=forms.HiddenInput, 
+                                   required=False,
+                                   initial=None)
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
@@ -103,7 +107,7 @@ class CommentForm(forms.ModelForm):
     
     class Meta:
         model = Comment
-        fields = ['text']
+        fields = ['text', 'parent_id']
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 5,  

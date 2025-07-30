@@ -17,9 +17,11 @@ class Post(models.Model):
     content = models.TextField()
     author = models.ForeignKey(User,  on_delete=models.CASCADE, verbose_name="Автор")
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    published_date = models.DateTimeField(null=True, blank=True, verbose_name="Дата публикации")
+    published_date = models.DateTimeField(null=True, blank=True, 
+                                          verbose_name="Дата публикации")
     is_published = models.BooleanField(default=True, verbose_name="Опубликовано")
-    image = models.ImageField(upload_to='posts/', blank=True, null=True, verbose_name="Изображение")
+    image = models.ImageField(upload_to='posts/', blank=True, 
+                              null=True, verbose_name="Изображение")
     
     def save(self, *args, **kwargs):
         if not self.slug:  # Если slug не задан
@@ -68,6 +70,8 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey('self', null=True, blank=True, 
+                               on_delete=models.CASCADE, related_name='replies')
 
     @property
     def like_count(self):

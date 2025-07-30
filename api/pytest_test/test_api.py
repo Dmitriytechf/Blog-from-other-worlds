@@ -1,8 +1,9 @@
 from http import HTTPStatus
+
 import pytest
 from django.urls import reverse
-from blog.models import Post, Comment
 
+from blog.models import Comment, Post
 
 pytestmark = pytest.mark.django_db
 
