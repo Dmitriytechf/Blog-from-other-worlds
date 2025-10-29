@@ -19,6 +19,7 @@
 - Возможность ставить лайки к постам и комментариям
 - Работа с API
 - Пагинация на сайте
+- Докер контейнеры
 
 ### ⚙️ Основной функционал работы с проектом для разработчика и администратора
 - Работа с API
@@ -35,6 +36,8 @@
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?logo=javascript&logoColor=black)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
 
 ### Тестирование
 ![Pytest](https://img.shields.io/badge/Pytest-8.4.0-0A9EDC)
