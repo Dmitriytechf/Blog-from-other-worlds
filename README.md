@@ -72,8 +72,9 @@ python -m venv venv
 source venv/Scripts/activate
 ```
 
-3. Установить зависимости из файла requirements.txt:
+3. Перейдите в backend и установить зависимости из файла requirements.txt:
 ```bash
+cd backend
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
