@@ -96,6 +96,10 @@ class Comment(models.Model):
             user=user
         ).exists()
 
+    class Meta:
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
+
     def __str__(self):
         return f'Автор комментария: {self.author}. Пост: {self.post}'
 

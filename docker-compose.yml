@@ -1,0 +1,31 @@
+version: "3.8"
+
+volumes:
+  postgres_data:
+  static_data:
+  media_data:
+
+services:
+  db:
+    image: postgres:14-alpine
+    container_name: post-db
+    env_file: .env.docker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    build: ./backend
+    container_name: post-backend
+    env_file: .env.docker
+    volumes:
+      - static_data:/app/static
+      - media_data:/app/media
+    depends_on:
+      - db
+    ports:
+      - 8001:8000
+    restart: always
+    command: sh -c "python manage.py makemigrations &&
+                    python manage.py migrate &&
+                    python manage.py runserver 0.0.0.0:8000"

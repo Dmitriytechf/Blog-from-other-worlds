@@ -16,16 +16,16 @@
                 <div class="input-group h-100">
                     <select name="sort" class="form-select" onchange="this.form.submit()"
                             style="width: auto; border-top-left-radius: 0; border-bottom-left-radius: 0;">
-                        <option value="-published_date" {% if request.GET.sort == "-published_date" %}selected{% endif %}>
+                        <option value="-published_date" {% if request.GET.current_sort == "-published_date" %}selected{% endif %}>
                             <i class="fas fa-arrow-down me-2"></i> Новые
                         </option>
-                        <option value="published_date" {% if request.GET.sort == "published_date" %}selected{% endif %}>
+                        <option value="published_date" {% if request.GET.current_sort == "published_date" %}selected{% endif %}>
                             <i class="fas fa-arrow-up me-2"></i> Старые
                         </option>
-                        <option value="title" {% if request.GET.sort == "title" %}selected{% endif %}>
+                        <option value="title" {% if request.GET.current_sort == "title" %}selected{% endif %}>
                             <i class="fas fa-sort-alpha-down me-2"></i> А-Я
                         </option>
-                        <option value="-title" {% if request.GET.sort == "-title" %}selected{% endif %}>
+                        <option value="-title" {% if request.GET.current_sort == "-title" %}selected{% endif %}>
                             <i class="fas fa-sort-alpha-down-alt me-2"></i> Я-А
                         </option>
                     </select>

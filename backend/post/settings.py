@@ -68,12 +68,12 @@ WSGI_APPLICATION = 'post.wsgi.application'
 # База данных
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blogotherworld',
-        'USER': 'admin',
-        'PASSWORD': 'satoshiinaka',  
-        'HOST': 'localhost',        
-        'PORT': '5432',              
+        'ENGINE': os.getenv('DB_ENGINE'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 

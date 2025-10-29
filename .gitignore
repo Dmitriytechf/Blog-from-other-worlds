@@ -4,6 +4,11 @@ venv/
 
 # Конфиденциальные данные
 .env
+.env.db
+.env.docker
+.env.app
+.env.local
+*.env
 *.key
 
 # Логи и кэш
@@ -15,3 +20,4 @@ __pycache__/
 .vscode/
 
 user.txt
+help.txt
