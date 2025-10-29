@@ -25,6 +25,7 @@
 - Удобная панель администратора
 - Настройки тестов
 - Настройки flake8 для оформления проекта
+- Докер контейнеры
 
 ## 🛠️ Стек технологий
 
@@ -35,6 +36,8 @@
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?logo=javascript&logoColor=black)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
 
 ### Тестирование
 ![Pytest](https://img.shields.io/badge/Pytest-8.4.0-0A9EDC)
@@ -43,6 +46,20 @@
 - Бэкенд: Python 3.7+, Django 5.1+
 - API: Django REST Framework 3.12+
 - Фронтенд: Bootstrap
+
+## Внешний вид
+
+### Главная
+<img width="1268" height="939" alt="image" src="https://github.com/user-attachments/assets/4ae3470f-91ea-45e6-8a32-3ba9b91405e4" />
+<img width="1394" height="901" alt="image" src="https://github.com/user-attachments/assets/d9ac1f5d-6266-4e11-83e3-4e8e1055894c" />
+<img width="1290" height="774" alt="image" src="https://github.com/user-attachments/assets/2907e70e-3b9e-476e-a355-b82141af7687" />
+
+### Отдельный пост
+<img width="1238" height="912" alt="image" src="https://github.com/user-attachments/assets/9de8962b-e8e8-4e12-976e-e8991ccf7208" />
+<img width="1404" height="908" alt="image" src="https://github.com/user-attachments/assets/15b86ba6-2e47-4b05-8ece-ed020e46c229" />
+
+### Регистрация
+<img width="1041" height="919" alt="image" src="https://github.com/user-attachments/assets/2f26e574-cb9f-40d3-b477-473a4ed2d150" />
 
 
 ## 🚀 Установка
@@ -58,8 +75,9 @@ python -m venv venv
 source venv/Scripts/activate
 ```
 
-3. Установить зависимости из файла requirements.txt:
+3. Перейдите в backend и установить зависимости из файла requirements.txt:
 ```bash
+cd backend
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
