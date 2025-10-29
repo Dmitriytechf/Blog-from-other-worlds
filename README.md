@@ -44,6 +44,20 @@
 - API: Django REST Framework 3.12+
 - Фронтенд: Bootstrap
 
+## Внешний вид
+
+### Главная
+<img width="1268" height="939" alt="image" src="https://github.com/user-attachments/assets/4ae3470f-91ea-45e6-8a32-3ba9b91405e4" />
+<img width="1394" height="901" alt="image" src="https://github.com/user-attachments/assets/d9ac1f5d-6266-4e11-83e3-4e8e1055894c" />
+<img width="1290" height="774" alt="image" src="https://github.com/user-attachments/assets/2907e70e-3b9e-476e-a355-b82141af7687" />
+
+### Отдельный пост
+<img width="1238" height="912" alt="image" src="https://github.com/user-attachments/assets/9de8962b-e8e8-4e12-976e-e8991ccf7208" />
+<img width="1404" height="908" alt="image" src="https://github.com/user-attachments/assets/15b86ba6-2e47-4b05-8ece-ed020e46c229" />
+
+### Регистрация
+<img width="1041" height="919" alt="image" src="https://github.com/user-attachments/assets/2f26e574-cb9f-40d3-b477-473a4ed2d150" />
+
 
 ## 🚀 Установка
 1. Клонируйте репозиторий:
